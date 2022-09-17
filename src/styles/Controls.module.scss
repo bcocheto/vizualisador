@@ -1,0 +1,68 @@
+
+.controls {
+  display: grid;
+  row-gap: 1rem;
+  column-gap: 6rem;
+  font-size: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 35vw));
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    .button {
+      width: 40%;
+      font-size: 18px;
+      font-weight: 500;
+      margin: 10px;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      background-color: #F5F5F5;
+      color: #37474F;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover,
+      &:active {
+        background-color: #EEEEEE;
+      }
+      @media only screen and (max-width: 600px) {
+        width: 100%;
+        padding: 1rem 2rem;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    height: 40%;
+    font-size: 80%;
+  }
+}
+
+.drop {
+  animation: dropDown 0.4s forwards ease-in-out .5s;
+}
+
+.rise {
+  animation: riseup 0.4s forwards ease-in-out;
+}
+
+@keyframes riseup {
+  0% {
+    transform: translateY(150%);
+  }
+  100% {
+    transform: translate(0%);
+  }
+}
+
+@keyframes dropDown {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(150%);
+  }
+}

@@ -1,0 +1,76 @@
+import React, { useState, useEffect, useCallback } from "react";
+import "./App.scss";
+import Controls from "./components/Controls";
+import MainHeader from "./components/MainHeader";
+import SortingGraph from "./components/SortingGraph";
+import { DEFAULT_ARRAY, SORTBY } from "./DefaultValues";
+import {
+  insertionSort,
+  randomizeArray,
+  selectionSort
+} from "./SortingAlgorithms";
+
+function App() {
+  const [array, setArray] = useState<number[]>(DEFAULT_ARRAY);
+  const [arraySize, setArraySize] = useState(20);
+  const [sortBy, setSortBy] = useState(SORTBY.INSERTION_SORT);
+  const [maxValue, setMaxValue] = useState(Number.MIN_VALUE);
+  const [sortingSpeed, setSortingSpeed] = useState(50);
+  const [swappedBars, setSwappedBars] = useState({});
+  const [isSorting, setIsSorting] = useState(false);
+
+  const createRandomArray = useCallback(() => {
+    let maxValue = Number.MIN_VALUE;
+    const randomArray = randomizeArray(arraySize);
+
+    for (const randNum of randomArray) {
+      maxValue = Math.max(maxValue, randNum);
+    }
+
+    setMaxValue(maxValue);
+    setArray(randomArray);
+  }, [arraySize]);
+
+  const sortHandler = async () => {
+    setIsSorting(true);
+    switch (sortBy) {
+      case SORTBY.INSERTION_SORT:
+        await insertionSort(array, sortingSpeed, setSwappedBars);
+        break;
+      case SORTBY.SELECTION_SORT:
+        await selectionSort(array, sortingSpeed, setSwappedBars);
+        break;
+    }
+    setIsSorting(false);
+  };
+
+  useEffect(() => {
+    createRandomArray();
+  }, [arraySize, createRandomArray]);
+
+  return (
+    <div className="App">
+      <MainHeader />
+      <SortingGraph
+        maxValue={maxValue}
+        array={array}
+        arraySize={arraySize}
+        swappedBars={swappedBars}
+        isSorting={isSorting}
+      />
+      <Controls
+        sortBy={sortBy}
+        isSorting={isSorting}
+        onSort={sortHandler}
+        arraySize={arraySize}
+        sortingSpeed={sortingSpeed}
+        arrayRandomizeHandler={createRandomArray}
+        onDropdownChange={(sortBy) => setSortBy(sortBy)}
+        onSizeChange={(size) => setArraySize(size)}
+        onSpeedChange={(speed) => setSortingSpeed(speed)}
+      />
+    </div>
+  );
+}
+
+export default App;
